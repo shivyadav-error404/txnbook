@@ -1,0 +1,67 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "User account information, grand totals of debt, and preferences.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique user ID matching Auth uid." },
+        "name": { "type": "string", "description": "Display name of the user." },
+        "email": { "type": "string", "format": "email", "description": "Email address of the user." },
+        "photoURL": { "type": "string", "description": "Profile picture URL." },
+        "totalOwe": { "type": "number", "description": "Total amount the user owes." },
+        "totalGet": { "type": "number", "description": "Total amount the user is owed." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of profile creation." }
+      },
+      "required": ["uid", "name", "email", "totalOwe", "totalGet"]
+    },
+    "Friend": {
+      "title": "Friend",
+      "description": "A contact (friend or family) with ledger record of debts.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique friend ID." },
+        "ownerId": { "type": "string", "description": "UID of the user who owns this ledger entry." },
+        "name": { "type": "string", "description": "Name of the friend." },
+        "balance": { "type": "number", "description": "Current balance: positive code indicates owed to user, negative indicates user owes friend." },
+        "lastUpdate": { "type": "string", "format": "date-time", "description": "Timestamp of the last transaction or activity." },
+        "lastActivityText": { "type": "string", "description": "Short description of the last activity." },
+        "phone": { "type": "string", "description": "Optional phone number." },
+        "avatarUrl": { "type": "string", "description": "Avatar placeholder or image path." }
+      },
+      "required": ["id", "ownerId", "name", "balance", "lastUpdate"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Ledger entry for friend debts or personal entries.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique transaction ID." },
+        "ownerId": { "type": "string", "description": "UID of the user who logged this transaction." },
+        "friendId": { "type": "string", "description": "ID of the associated friend, or empty if personal cashbook." },
+        "type": { "type": "string", "enum": ["gave", "got"], "description": "Role of cash movement: gave (outflow/debt debit), got (inflow/credit)." },
+        "amount": { "type": "number", "description": "Transaction value in rupees." },
+        "category": { "type": "string", "description": "Category tag: Coffee, Lunch, Rent, Travel, etc." },
+        "note": { "type": "string", "description": "Optional memo or desc." },
+        "date": { "type": "string", "format": "date-time", "description": "Transaction date." },
+        "paymentMode": { "type": "string", "enum": ["Cash", "Online", "Credit"], "description": "Mode of financial payment." },
+        "photoUrl": { "type": "string", "description": "Optional receipt photo path." }
+      },
+      "required": ["id", "ownerId", "type", "amount", "category", "date", "paymentMode"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profiles data."
+    },
+    "/users/{userId}/friends/{friendId}": {
+      "schema": "Friend",
+      "description": "Subcollection of friends details managed by a specific user."
+    },
+    "/users/{userId}/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Subcollection of transactions logged by a specific user."
+    }
+  }
+}

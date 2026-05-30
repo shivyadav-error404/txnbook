@@ -1,0 +1,6 @@
+{
+  "name": "TxnBook",
+  "description": "Manage peer-to-peer ledger balances, record transactions (I Gave / I Got), split bills with friends, and view analytics on spending and lending behavior with cloud Google Backup sync.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
